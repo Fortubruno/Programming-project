@@ -1,0 +1,112 @@
+{% extends 'skeleton.html' %}
+
+{% block body %}
+<div class="margin">
+    <h1 style="color:#96031A">Here is your sequence <em>{{obj.name}}</em></h1>
+</div>
+
+<div class="container">
+  <div class="left">
+    <h2>
+        <form action="/download={{obj.name}}&{{obj.type}}&fa" method="post">
+            <aside style="margin-left:2px;">
+            <details >
+                <summary style="cursor:pointer;"> Show {{obj.type}} sequence <button type="submit" class="download">Download as FASTA</button></summary>
+                <p style="font-family:'Courier New'; font-size: 22px; white-space: pre-wrap;">{{obj}}</p>
+            </details>
+            </aside>
+        </form>
+    </h2>
+
+    <br><br>
+
+    {%if obj.type=="DNA" %}
+    <form action="/transcription={{obj.name}}&get&{{obj.type}}" style="text-align: left" method="post">
+         <label class="writings" for="value"> &nbsp; How to transcribe:  </label>
+        <select style="font-size: 15px" class="button" id="value" name="value">
+            <option value="NT" selected>Normal Transcription</option>
+            <option value="RT">Reverse Transcription</option>
+            <option value="B">Both</option>
+        </select>
+        <button style="font-size: 15px" class="button" type="submit">Perform</button>
+    </form>
+
+    {%elif obj.type=="mRNA" %}
+    <br>
+      <div style="display: flex; align-items: center">
+        <a class="button" style="margin-left: 20px;font-size: 20px" href="/transcription={{obj.name}}&NT&{{obj.type}}">Transcribe </a>
+        <a class="button" style="margin-left: 30px;font-size: 20px" href="/translation={{obj.name}}">Translate </a>
+      </div>
+
+    {% else %}
+    <a class="button" style="margin-left: 20px;font-size: 20px" href="/transcription={{obj.name}}&NT&{{obj.type}}"> Transcribe </a>
+    {% endif %}
+  </div>
+
+
+
+
+    <div class="right">
+        <br>
+        <form action="/download={{obj.name}}&{{obj.type}}&txt" method="post">
+            <h2 style="margin-left:20px; display:inline" >Statistics </h2>
+            <button type="submit" class="download">Download as txt</button>
+        </form>
+        <br>
+        <fieldset>
+            <div style="display: flex">
+                <p class="writings" style="margin-right: 150px">Length: {{obj.stats.length}}{{obj.stats.unit}}</p>
+                {% if obj.type=="DNA" or obj.type=="mRNA" %}
+                    <p class="writings"> GC content: {{obj.stats.GC_content()}}% </p>
+                {% endif %}
+            </div>
+            <br>
+            <p class="writings">
+                {% for key, value in obj.stats.frequencies().items() %}
+                    <span class="inline">
+                    {{key}}: {{value[0]}} ({{value[1]}}%)
+                    </span>
+                {% endfor %}
+            </p>
+        </fieldset>
+        <br>
+
+        <button class="info"> <span class="circle"> ? </span> </button>
+
+        {% if obj.type=="DNA" %}
+            <div class="hidden-content">
+                <span style="color:#E68994">A: Adenine </span>
+                <br> <span style="color:#337167"> T: Thymine </span> <br> <span style="color: #96031A">G: Guanosine</span>
+                <br> <span style="color: #FFC759">C: Cytosine </span> <br> <span style="color:#120A8F"> N: Nucleotide </span>
+            </div>
+        {% elif obj.type=="mRNA"%}
+            <div class="hidden-content">
+                <span style="color:#E68994">A: Adenine </span>
+                <br> <span style="color:#337167"> U: Uracil </span> <br> <span style="color: #96031A">G: Guanosine</span>
+                <br> <span style="color: #FFC759">C: Cytosine </span> <br> <span style="color:#120A8F"> N: Nucleotide </span>
+            </div>
+        {% else %}
+            <div class="hidden-content">
+                <div class="left">
+                    <span style="color:#0AFFFF"> Y: Tyrosine  </span> <br> <span style="color:#FF1DCE">N: Asparagine</span>
+                <br><span style="color:#C7EA46"> A: Alanine</span>  <br>  <span style="color:#50C878"> F: Phenilalanine</span>
+                <br><span style="color:#4CBB17"> L: Leucine </span> <br> <span style="color:#800080"> K: Lysine</span>
+                <br><span style="color:#005A9C"> H: Histidine</span>  <br> <span style="color:#FF5F1F"> T: Threonine</span>
+                <br><span style="color:#F04A00"> S: Serine </span> <br> <span style="color:#00A86B"> V: Valine</span>
+                </div>
+                <div class="right">
+                <span style="color:#FFF700"> C: Cysteine</span> <br> <span style="color:#000080"> R: Arginine</span>
+                <br><span style="color:#F75182"> G: Glycine </span> <br> <span style="color:#DC143C"> E: Glutamic Acid</span>
+                <br><span style="color:#FFD800"> P: Proline</span> <br> <span style="color:#0B6623">M: Methionine</span>
+                <br><span style="color:#4CBB17"> I: lsoleucine</span> <br> <span style="color:#E0115F"> Q: Glutamine</span>
+                <br><span style="color:#FF0800"> D: Aspartic Acid </span> <br> <span style="color:#007FFF"> W: Triptophan</span>
+                </div>
+            </div>
+        {% endif %}
+        <br>
+
+        <img src="data:image/png;base64,{{hist}}" alt="Histogram">
+    </div>
+</div>
+<br><br>
+{% endblock %}

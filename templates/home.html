@@ -1,0 +1,32 @@
+{% extends 'skeleton.html' %}
+
+{% block body %}
+<br>
+ <div style="margin-top:-30px; color: #000000">
+    <div style="text-align:center;" >
+        <video width="100%" autoplay loop muted>
+            <source label="720p" src="/serve=img-video_logo.mp4" type="video/mp4">
+            Il tuo browser non supporta il tag video.
+        </video>
+    </div>
+</div>
+<br><br><h1>&nbsp; Welcome to our website</h1>
+<h2>&nbsp; Mnemosyne is a Genetic tool to work with FASTA files. To get started on our platform you simply need to upload either your</h2>
+<ul>
+    <li><h3> DNA; </h3></li>
+    <li><h3> RNA; </h3></li>
+    <li><h3> Polipeptide. </h3></li>
+</ul>
+
+<form action='/Sequence=Home&Unknown' method="POST" enctype="multipart/form-data">
+    <fieldset>
+        <label for="file" class="button" style="font-size: 25px"> Drag and drop or Upload Fasta</label>
+      <input  type="file" name="file" id="file" accept=".fasta,.fas,.fa,.fna,.ffn,.faa,.mpfa,.frn" required="required">
+        <span class="tick"> ✔ </span>
+      <br> <button style="font-size: 20px; margin-top: 10px" class="button" type="submit"> Upload</button>
+    </fieldset>
+</form>
+
+<br><br>
+
+{% endblock %}
